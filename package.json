@@ -1,0 +1,28 @@
+{
+  "name": "next-talents-jobs-api",
+  "version": "1.0.0",
+  "description": "jobs application",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/splashray/Next-talents-Jobs-Api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/splashray/Next-talents-Jobs-Api/issues"
+  },
+  "homepage": "https://github.com/splashray/Next-talents-Jobs-Api#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.1.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.2.2",
+    "nodemon": "^2.0.22"
+  }
+}
