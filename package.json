@@ -1,0 +1,26 @@
+{
+  "name": "next-talents-jobs-api",
+  "version": "1.0.0",
+  "description": "Complete Next  talents Jobs-Api with Nodejs and mongodb",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/splashray/Next-talents-Jobs-Api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/splashray/Next-talents-Jobs-Api/issues"
+  },
+  "homepage": "https://github.com/splashray/Next-talents-Jobs-Api#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "lodash": "^4.17.21",
+    "mongoose": "^7.2.2",
+    "nodemon": "^2.0.22"
+  }
+}
