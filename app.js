@@ -2,6 +2,7 @@ require('dotenv').config()
 const authRouter = require('./routes/auth')
 const connectDB = require('./db/connect')
 const errorHandlerMiddleware = require('./middlewares/error-handler')
+const resumeRoutes = require('./routes/candidates/resume');
 const express = require('express');
 const app = express()
 
@@ -13,11 +14,13 @@ app.use(express.json())
 app.get('/api/v1',(req,res)=>{
     res.send('job listing api is now live');
 })
-app.use('/api/v1/auth',authRouter)
+app.use('/api/v1/auth',authRouter);
+app.use('/api/v1/dashboard/resumes', resumeRoutes);
 
 
 const start = async()=>{
     try {
+
         await connectDB(process.env.MONGOURI)
         app.listen(3000,
             ()=>console.log(`app is listening on port 3000...`))
