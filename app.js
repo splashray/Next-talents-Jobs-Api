@@ -8,6 +8,7 @@ const passport = require('passport')
 const session = require('express-session')
 
 const authRouter = require('./routes/auth')
+const profileRoutes = require("./routes/candidates/profile");
 const resumeRoutes = require('./routes/candidates/resume');
 const asyncErrors = require('express-async-errors')
 const errorHandlerMiddleware = require('./middlewares/error-handler')
@@ -33,17 +34,14 @@ app.get('/api/v1',(req,res)=>{
 app.use('/api/v1/auth',authRouter);
 app.use('/google', authRouter);
 app.use('/api/v1/dashboard/resumes',authenticateUser, resumeRoutes);
+app.use("/api/v1/dashboard/profile",authenticateUser, profileRoutes);
 
-
-const start = async()=>{
-    try {
-        
-        await connectDB(process.env.MONGOURI)
-        app.listen(3000,
-            ()=>console.log(`app is listening on port 3000...`))
-        } catch (error) {
-            console.log(error);
-        }
-    }
-    start()
-    
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGOURI);
+    app.listen(3000, () => console.log(`app is listening on port 3000...`));
+  } catch (error) {
+    console.log(error);
+  }
+};
+start();
