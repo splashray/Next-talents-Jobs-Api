@@ -1,32 +1,31 @@
-require('dotenv').config()
-const authRouter = require('./routes/auth')
-const connectDB = require('./db/connect')
-const errorHandlerMiddleware = require('./middlewares/error-handler')
-const resumeRoutes = require('./routes/candidates/resume');
-const express = require('express');
-const app = express()
+require("dotenv").config();
+const authRouter = require("./routes/auth");
+const connectDB = require("./db/connect");
+const errorHandlerMiddleware = require("./middlewares/error-handler");
+const resumeRoutes = require("./routes/candidates/resume");
+const profileRoutes = require("./routes/candidates/profile");
+const express = require("express");
+const app = express();
 
 // middlewares
 app.use(errorHandlerMiddleware);
-app.use(express.json())
+app.use(express.json());
 
 // routers
-app.get('/api/v1',(req,res)=>{
-    res.send('job listing api is now live');
-})
-app.use('/api/v1/auth',authRouter);
-app.use('/api/v1/dashboard/resumes', resumeRoutes);
+app.get("/api/v1", (req, res) => {
+  res.send("job listing api is now live");
+});
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/dashboard/resumes", resumeRoutes);
+app.use("/api/v1/dashboard/profile", profileRoutes);
 
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGOURI);
+    app.listen(3000, () => console.log(`app is listening on port 3000...`));
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-const start = async()=>{
-    try {
-
-        await connectDB(process.env.MONGOURI)
-        app.listen(3000,
-            ()=>console.log(`app is listening on port 3000...`))
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-start()
+start();
