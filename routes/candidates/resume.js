@@ -9,12 +9,12 @@ router.get('/', resumeController.getAllResumes);
 router.post('/', resumeController.createResume);
 
 // GET /api/resumes/:id
-router.get('/:id', resumeController.getResumeById);
+// router.get('/', resumeController.getResumeById);
 
 // PUT /api/resumes/:id
-router.put('/:id', resumeController.updateResume);
+router.patch('/', resumeController.updateResume);
 
 // DELETE /api/resumes/:id
-router.delete('/:id', resumeController.deleteResume);
+router.delete('/', resumeController.deleteResume);
 
 module.exports = router;

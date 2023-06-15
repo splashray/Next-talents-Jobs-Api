@@ -5,11 +5,8 @@ const router = express.Router();
 
 const profileController = require("../../controllers/candidates/profile");
 
-// Create a new user profile
-router.post("/", profileController.createProfile);
-
 // Update profile by ID
-router.patch("/:id", profileController.updateProfile);
+router.patch("/", profileController.updateProfile);
 
 
 module.exports = router;
