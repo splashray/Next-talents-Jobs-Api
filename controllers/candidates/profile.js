@@ -1,16 +1,18 @@
 const _ = require("lodash");
 const { Profile } = require("../../models/candidates/profile");
+const {StatusCodes} = require("http-status-codes");
 
 // Create a profile for a user
 
 const createProfile = async (req, res) => {
-  const createdBy = req.user.userId;
-  const email = req.email;
+  req.body.user = req.user.userId;
+  req.body.email = req.email;
+  token = req.token;
   const userData = req.user.User;
 
-  const newProfile = await Profile.create({ ...req.body, createdBy, email });
+  const newProfile = await Profile.create(req.body);
 
-  res.status(StatusCodes.CREATED).json({ user: userData, profile: newProfile });
+  res.status(StatusCodes.CREATED).json({ user: userData, token: token,profile: newProfile });
 };
 
 // Update a user profile
@@ -30,9 +32,8 @@ const updateProfile = async (req, res) => {
       workExperience,
       awards,
     } = req.body;
-
-    const updatedProfile = await Profile.findByIdAndUpdate(
-      { createdBy: req.user.userId },
+    const updatedProfile = await Profile.findOneAndUpdate(
+      { user: req.user.userId },
       {
         username,
         profilePhoto,

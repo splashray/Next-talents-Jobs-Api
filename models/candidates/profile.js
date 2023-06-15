@@ -8,7 +8,7 @@ const profileSchema = new mongoose.Schema({
   },
   username: {
     type: String,
-    required: true,
+    default: "",
   },
   profilePhoto: {
     type: String,
@@ -16,33 +16,43 @@ const profileSchema = new mongoose.Schema({
   },
   skills: {
     type: String,
+    default: "",
   },
   location: {
     type: String,
+    default: "",
   },
   sallary: {
     type: String,
+    default: "",
   },
   about: {
     type: String,
+    default: "",
   },
   education: {
     type: String,
+    default: "",
   },
   cv: {
     type: String,
+    default: "",
   },
   gender: {
     type: String,
+    default: "",
   },
   languages: {
     type: String,
+    default: "",
   },
   workExperience: {
     type: String,
+    default: "",
   },
   awards: {
     type: String,
+    default: "",
   },
 });
 

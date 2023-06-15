@@ -2,14 +2,14 @@ const user = require('../models/user')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, UnauthenticatedError } = require('../errors')
 
-const register = async (req, res) => {
+const register = async (req, res,next) => {
     try {
         const USER = await user.create({ ...req.body })
-        const token = USER.createJwt()
-        res.status(StatusCodes.CREATED).json({USER})
+        const token = USER.createJwt();
         const email = USER.email
         req.user = { userId: USER._id, User: USER }
         req.email = email
+        req.token = token
         next()
     } catch (error) {
         console.log(error);

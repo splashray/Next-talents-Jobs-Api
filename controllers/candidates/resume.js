@@ -4,7 +4,7 @@ const Resume = require('../../models/candidates/resume');
 async function getAllResumes(req, res) {
   try {
     const resumes = await Resume.find();
-    res.json(resumes);
+    res.json({resumes});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
@@ -14,10 +14,10 @@ async function getAllResumes(req, res) {
 // Create a new resume
 async function createResume(req, res) {
   try {
-    const { user, title, contact, summary, education, experience, skills, certifications } = req.body;
+    const { user,title, contact, summary, education, experience, skills, certifications } = req.body;
 
     const newResume = new Resume({
-      user,
+      user:req.user.userId,
       title,
       contact,
       summary,
@@ -54,10 +54,9 @@ async function getResumeById(req, res) {
 // Update a resume
 async function updateResume(req, res) {
   try {
-    const { user, title,contact,summary, education, experience, skills, certifications } = req.body;
+    const { title,contact,summary, education, experience, skills, certifications } = req.body;
 
     const updatedResume = {
-      user,
       title,
       contact,
       summary,
@@ -66,8 +65,9 @@ async function updateResume(req, res) {
       skills,
       certifications,
     };
+    const user = req.user.userId;
 
-    const resume = await Resume.findByIdAndUpdate(req.params.id, updatedResume, { new: true });
+    const resume = await Resume.findOneAndUpdate({user}, updatedResume, { new: true, runValidators: true });
 
     if (!resume) {
       return res.status(404).json({ message: 'Resume not found' });
@@ -83,7 +83,8 @@ async function updateResume(req, res) {
 // Delete a resume
 async function deleteResume(req, res) {
   try {
-    const resume = await Resume.findByIdAndDelete(req.params.id);
+    const user = req.user.userId;
+    const resume = await Resume.findOneAndDelete({user});
 
     if (!resume) {
       return res.status(404).json({ message: 'Resume not found' });

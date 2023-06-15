@@ -5,7 +5,6 @@ const authenticateUser = require('./middlewares/authentication')
 
 // for google login or register
 const passport = require('passport')
-const session = require('express-session')
 
 const authRouter = require('./routes/auth')
 const profileRoutes = require("./routes/candidates/profile");
@@ -15,6 +14,7 @@ const errorHandlerMiddleware = require('./middlewares/error-handler')
 
 const express = require('express');
 const app = express()
+const session = require('express-session')
 
 // middlewares
 app.use(errorHandlerMiddleware);
