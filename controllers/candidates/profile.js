@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const { Profile } = require("../../models/candidates/profile");
+const  Profile  = require("../../models/candidates/profile");
 const {StatusCodes} = require("http-status-codes");
 
 // Create a profile for a user
