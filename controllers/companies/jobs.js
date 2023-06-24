@@ -15,8 +15,8 @@ const createJobsPost = async (req, res) => {
 //controller for getting all job post
 const getAllJobPost = async (req, res) => {
   try {
-    const companyId = req.params.userId;
-    const getSavedJobs = await JobPost.find({ company: companyId }); // Get all saved job post from the DB
+    const companyId = _.toString(req.params.userId).trim();
+    const getSavedJobs = await JobPost.find({ user: companyId }); // Get all saved job post from the DB
     res.status(200).json(getSavedJobs);
   } catch (err) {
     res.status(500).json({ err: "failed to fetch all job posts" });
@@ -39,7 +39,7 @@ const getJobPostByID = async (req, res) => {
 // Controller to update a job post by ID
 const updateJobPostByID = async (req, res) => {
   try {
-    const jobId = req.params.id;
+    const jobId = _.toString(req.params.id).trim();
     const jobPostData = req.body;
     const updatedJobPost = await JobPost.findByIdAndUpdate(jobId, jobPostData, {
       new: true,
@@ -57,7 +57,7 @@ const updateJobPostByID = async (req, res) => {
 // Controller to delete a job post by ID
 const deleteJobPostByID = async (req, res) => {
   try {
-    const jobId = req.params.id;
+    const jobId = _.toString(req.params.id).trim();
     const deletedJobPost = await JobPost.findByIdAndRemove(jobId);
     if (!deletedJobPost) {
       return res.status(404).json({ error: "Job post not found" });
