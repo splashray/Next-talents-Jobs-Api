@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -42,7 +42,7 @@ userSchema.pre('save', async function(){
     this.password = await bcrypt.hash(this.password,salt)
 })
 userSchema.methods.createJwt = function(){
-    const token = jwt.sign({userId:this._id,name:this.name},process.env.JWTSECRET,{expiresIn:process.env.JWTLIFETIME})
+    const token = jwt.sign({userId:this._id,email:this.email},process.env.JWTSECRET,{expiresIn:process.env.JWTLIFETIME})
     return token;
 };
 userSchema.methods.comparePassword = async function(providedPassword){
