@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -20,21 +20,9 @@ const userSchema = mongoose.Schema({
         maxlength:50,
         required:true
     },
-    role:{
-        type:String,
-        enum:['candidate','employer'],
-        required:true,
-        default:'candidate'
-    },
-    oauth:{
-        type:String,
-        enum:['yes','no'],
-        default:'no',
-        required:true
-    },
     isVerified:{
         type:Boolean,
-        default: false
+        default:false
     }
 })
 userSchema.pre('save', async function(){
@@ -42,7 +30,7 @@ userSchema.pre('save', async function(){
     this.password = await bcrypt.hash(this.password,salt)
 })
 userSchema.methods.createJwt = function(){
-    const token = jwt.sign({userId:this._id,email:this.email},process.env.JWTSECRET,{expiresIn:process.env.JWTLIFETIME})
+    const token = jwt.sign({adminId:this._id,adminName:this.name},process.env.ADMINJWTSECRET,{expiresIn:process.env.JWTLIFETIME})
     return token;
 };
 userSchema.methods.comparePassword = async function(providedPassword){
@@ -50,8 +38,4 @@ userSchema.methods.comparePassword = async function(providedPassword){
     return verifyPassword
 }
 
-const user = mongoose.model('user',userSchema)
-
-module.exports = user;
-
-
+module.exports = mongoose.model('admin',userSchema)

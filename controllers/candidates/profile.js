@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const { Profile } = require("../../models/candidates/profile");
+const  Profile  = require("../../models/candidates/profile");
 const {StatusCodes} = require("http-status-codes");
 
 // Create a profile for a user
@@ -9,10 +9,7 @@ const createProfile = async (req, res) => {
   req.body.email = req.email;
   token = req.token;
   const userData = req.user.User;
-
   const newProfile = await Profile.create(req.body);
-
-  res.status(StatusCodes.CREATED).json({ user: userData, token: token,profile: newProfile });
 };
 
 // Update a user profile
