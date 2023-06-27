@@ -1,17 +1,18 @@
 require('dotenv').config()
-require('./googleOauth2')
+require('./utils/googleOauth2')
 const connectDB = require('./db/connect')
 const { auth, checkAdmin } = require('./middlewares/authentication')
 
 // for google login or register
 // const passport = require('passport')
 
+const {verifyNewUser} = require('./controllers/auth')
 const authRouter = require('./routes/auth')
 const adminRouter = require('./routes/admin');
 const profileRoutes = require("./routes/candidates/profile");
 const resumeRoutes = require('./routes/candidates/resume');
 const asyncErrors = require('express-async-errors')
-const errorHandlerMiddleware = require('./middlewares/error-handler')
+const {errorHandlerMiddleware} = require('./middlewares/error-handler')
 
 const express = require('express');
 const app = express()

@@ -3,13 +3,19 @@ const router = express.Router()
 const passport = require('passport')
 
 const {adminLogin, adminRegister} = require('../controllers/auth');
-const {register,login,googleRegister} = require('../controllers/auth')
+const {auth} = require('../middlewares/authentication')
+const {register, verifyNewUser,login,googleRegister,
+    forgotPassword,verifyToken,resetPassword} = require('../controllers/auth')
 const {createProfile,updateProfile} = require('../controllers/candidates/profile')
 
 // candidate auth route
 
 router.post('/register',[register,createProfile])
+router.patch('/register/verifyuser',auth,verifyNewUser);
 router.post('/login',login)
+router.post('/forgotpassword',forgotPassword);
+router.get('/verifytoken/:token',verifyToken)
+router.patch('/resetpassword',auth,resetPassword);
 
 // google login router
 

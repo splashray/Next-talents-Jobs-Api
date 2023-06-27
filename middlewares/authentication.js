@@ -4,26 +4,27 @@ const {UnauthenticatedError} = require('../errors')
 const admin = require('../models/admin');
 
 
-
-const auth = async (req,res,next)=>{
-    const authHeader = req.headers.authorization
-    if(!authHeader || !authHeader.startsWith('Bearer')){
-        throw new UnauthenticatedError('unthentication invalid')
+const auth = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer')) {
+      throw new Error('unauthentication invalid');
     }
-    const token = authHeader.split(' ')[1]
+    const token = authHeader.split(' ')[1];
     try {
-        const payload = jwt.verify(token,process.env.JWTSECRET)
-        req.user = {userId:payload.userId,name:payload.name}
-        next()
+      const payload = jwt.verify(token, process.env.JWTSECRET);
+      req.user = { userId: payload.userId, email: payload.email };
+      console.log(req.user);
+      next();
     } catch (error) {
-        throw new UnauthenticatedError('unthentication invalid')
+      throw new Error('unauthentication invalid');
     }
-}
+  };
+  
 
 const checkAdmin = async (req,res, next)=>{
     const authHeader = req.headers.authorization
     if(!authHeader || !authHeader.startsWith('Bearer')){
-        throw new UnauthenticatedError('unthentication invalid')
+        throw new UnauthenticatedError('authentication invalid')
     }
     const token = authHeader.split(' ')[1]
     try {
