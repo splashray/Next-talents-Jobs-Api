@@ -6,11 +6,11 @@ const { auth, checkAdmin } = require('./middlewares/authentication')
 // for google login or register
 // const passport = require('passport')
 
-const {verifyNewUser} = require('./controllers/auth')
 const authRouter = require('./routes/auth')
 const adminRouter = require('./routes/admin');
 const profileRoutes = require("./routes/candidates/profile");
 const resumeRoutes = require('./routes/candidates/resume');
+const postJobsRoutes = require("./routes/companies/jobs");
 const asyncErrors = require('express-async-errors')
 const {errorHandlerMiddleware} = require('./middlewares/error-handler')
 
@@ -43,6 +43,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/google', authRouter);
 app.use('/api/v1/dashboard/resumes', auth, resumeRoutes);
 app.use("/api/v1/dashboard/profile", auth, profileRoutes);
+app.use("/api/v1/employers-dashboard/post-jobs", postJobsRoutes);
 
 // admin router
 app.use('/api/v1/admin/dashboard', checkAdmin, adminRouter);
