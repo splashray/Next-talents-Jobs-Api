@@ -6,7 +6,6 @@ const { auth, checkAdmin } = require('./middlewares/authentication')
 // for google login or register
 // const passport = require('passport')
 
-const {verifyNewUser} = require('./controllers/auth')
 const authRouter = require('./routes/auth')
 const adminRouter = require('./routes/admin');
 const profileRoutes = require("./routes/candidates/profile");
