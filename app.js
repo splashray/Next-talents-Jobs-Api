@@ -4,29 +4,30 @@ const connectDB = require('./db/connect')
 const { auth, checkAdmin } = require('./middlewares/authentication')
 
 // for google login or register
-// const passport = require('passport')
+const passport = require('passport')
 
 const authRouter = require('./routes/auth')
 const adminRouter = require('./routes/admin');
 const profileRoutes = require("./routes/candidates/profile");
+const companyProfileRoutes = require('./routes/company/profile')
 const resumeRoutes = require('./routes/candidates/resume');
 const asyncErrors = require('express-async-errors')
 const errorHandlerMiddleware = require('./middlewares/error-handler')
 
 const express = require('express');
 const app = express()
-// const session = require('express-session')
+const session = require('express-session')
 
 // middlewares
 app.use(errorHandlerMiddleware);
 app.use(express.json())
-// app.use(passport.initialize())
-// app.use(passport.session())
-// app.use(session({
-//   secret: process.env.SESSION_SECRET,
-//   resave: false,
-//   saveUninitialized: false
-// }));
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
 
 // routers
 
@@ -42,6 +43,10 @@ app.use('/api/v1/auth', authRouter);
 app.use('/google', authRouter);
 app.use('/api/v1/dashboard/resumes', auth, resumeRoutes);
 app.use("/api/v1/dashboard/profile", auth, profileRoutes);
+
+// company router 
+
+app.use('/api/v1/dashboard/companyProfile',companyProfileRoutes);
 
 // admin router
 app.use('/api/v1/admin/dashboard', checkAdmin, adminRouter);
