@@ -55,7 +55,6 @@ const login = async (req, res) => {
     const token = USER.createJwt()
     res.status(StatusCodes.OK).json({ USER, token: token })
 }
-
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
