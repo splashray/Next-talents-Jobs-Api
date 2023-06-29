@@ -1,4 +1,4 @@
-const Resume = require('../../models/candidates/resume');
+const Resume = require('../models/candidateResume.model');
 
 // Get all resumes
 async function getAllResumes(req, res) {
