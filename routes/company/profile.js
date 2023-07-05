@@ -3,7 +3,7 @@ const router = express.Router();
 // //Middleware
 // const isAdmin = require("../../middleware/adminMiddleware");
 
-const profileController = require("../../controllers/company/profile");
+const profileController = require("../../controllers/companyProfile.controller");
 
 // Update profile by ID
 router.patch("/", profileController.updateProfile);

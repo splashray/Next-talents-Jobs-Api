@@ -8,14 +8,8 @@ const passport = require('passport')
 
 const authRouter = require('./routes/auth')
 const adminRouter = require('./routes/admin');
-<<<<<<< HEAD
-const profileRoutes = require("./routes/candidates/profile");
-const companyProfileRoutes = require('./routes/company/profile')
-const resumeRoutes = require('./routes/candidates/resume');
-=======
 const candidateRouter = require("./routes/candidate.router");
 const companyRouter = require("./routes/company.router");
->>>>>>> 19c6fe279dbee07ce9a92558b2c1c240b271b31f
 const asyncErrors = require('express-async-errors')
 const {errorHandlerMiddleware} = require('./middlewares/error-handler')
 
