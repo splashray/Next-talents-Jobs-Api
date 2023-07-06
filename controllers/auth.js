@@ -12,7 +12,8 @@ const register = async (req, res, next) => {
     try {
         const USER = await user.create({ ...req.body })
         const token = USER.createJwt();
-        await sendOtpVerificationEmail({ id: USER._id, email: USER.email }, token, res);
+        const link = `${process.env.SITEURL}/auth/register/${token}`
+        await sendVerificationEmail({ _id: USER._id, email:USER.email }, link, res);
         const email = USER.email
         req.user = { userId: USER._id, User: USER }
         req.email = email
@@ -23,17 +24,20 @@ const register = async (req, res, next) => {
     }
 }
 const verifyNewUser = async (req, res) => {
-    const user = req.user.userId;
-    const email = req.user.email;
-    console.log(email);
-    const otp = req.body.otp;
-    await otpVerification(email , otp);
-    await user.findOneAndUpdate({ _id: user }, { isVerified: true }, { new: true, runValidators: true })
-    await userOtp.deleteMany({ userId: email })
-    res.status(StatusCodes.OK).json({
-        status: VERIFIED,
-        message: 'user verified, you can now proceed to login'
-    })
+    try {
+        const token = req.params.token;
+        const payload = jwt.verify(token,process.env.JWTSECRET)
+        const User = {userId:payload._id,email:payload.email}
+        if(!User){
+            throw new UnauthenticatedError("user not found")
+        }
+        const foundUser = user.findOne({email:User.email});
+        await user.findOneAndUpdate({_id:User.userId},{isVerified:true},{new:true,runValidators: true})
+        const newToken = await foundUser.createJwt();
+        res.status(StatusCodes.OK).json({message:"user is now verified",token:newToken});
+    } catch (error) {
+        throw new UnauthenticatedError('unauthenticated')
+    }
 }
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -46,7 +50,7 @@ const login = async (req, res) => {
     }
     const isVerified = USER.isVerified;
     if(!isVerified){
-        throw new UnauthenticatedError('user not verified kindly check your mail to verify')
+        throw new UnauthenticatedError('user is not verified kindly check your mail to verify')
     }
     const isPaswordCorrect = await USER.comparePassword(password);
     if (!isPaswordCorrect) {
@@ -66,7 +70,7 @@ const forgotPassword = async (req, res) => {
             throw new Error("User not found");
         } else {
             const token = await foundUser.createJwt();
-            const link = `${process.env.SITEURL}auth/verifytoken/${token}`
+            const link = `${process.env.SITEURL}/auth/verifytoken/${token}`
             await sendVerificationEmail({ _id: foundUser._id, email }, link, res);
         }
     } catch (error) {
@@ -77,13 +81,11 @@ const verifyToken = async (req,res)=>{
     try {
         const token = req.params.token;
         const payload = jwt.verify(token,process.env.JWTSECRET)
-        console.log(payload);
         const User = {userId:payload._id,email:payload.email}
         if(!User){
             throw new UnauthenticatedError("user not found")
         }
         const email = User.email
-        console.log(email);
         const foundUser = await user.findOne({email:email})
         const newToken = await foundUser.createJwt();
         res.status(StatusCodes.OK).json({message:"verified user",token:newToken});

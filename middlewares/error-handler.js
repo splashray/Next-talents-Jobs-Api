@@ -1,17 +1,17 @@
 const { StatusCodes } = require('http-status-codes')
 const {valiationError} = require('mongoose')
 const {CustomAPIError} = require('../errors/custom-api')
-const errorHandlerMiddleware = (err, req, res, next) => {
+const errorHandlerMiddleware = (error, req, res, next) => {
   // let customError = {
   //   // set default
   //   statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
   //   msg: err.message || 'Something went wrong try again later',
   // }
   
-  if (err instanceof CustomAPIError) {
-    return res.status(err.statusCode).json({ msg: err.message })
+  if (error instanceof CustomAPIError) {
+    return res.status(error.statusCode).json({ msg: error.message })
     }
-    if (err instanceof ValidationError) {
+    if (error instanceof ValidationError) {
       // Handle mongoose validation errors
       const errors = Object.values(err.errors).map((error) => error.message);
       return res.status(StatusCodes.BAD_REQUEST).json({ message: errors });
@@ -34,7 +34,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 //   }
 
 //   return res.status(customError.statusCode).json({ msg: customError.msg })
-next(err);
+next(error);
 }
 
 module.exports = {errorHandlerMiddleware}
