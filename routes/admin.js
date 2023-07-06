@@ -15,7 +15,7 @@ const router = express.Router();
 
 
 router.get('/users',getAllUsers);
-router.route('/:id').get(getUser).delete(DeleteUser);
+router.route('/users/:id').get(getUser).delete(DeleteUser);
 router.get('/candidates',getAllcandidates);
 router.get('/companies',getAllCompanies);
 router.get('/resumes',getAllResume);

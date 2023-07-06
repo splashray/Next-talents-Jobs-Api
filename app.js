@@ -46,11 +46,11 @@ app.get('/api/v1/candidate',candidateRouter);
 
 // candidate router
 
-app.use('/api/v1/candidate', auth, candidateRouter);
+app.use('/api/v1/candidates', auth, candidateRouter);
 app.use("/api/v1/employers",auth, companyRouter);
 
 // admin router
-app.use('/api/v1/admin/dashboard', checkAdmin, adminRouter);
+app.use('/api/v1/admin', checkAdmin, adminRouter);
 
 const start = async () => {
   try {

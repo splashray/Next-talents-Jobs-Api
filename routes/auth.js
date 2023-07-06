@@ -6,12 +6,12 @@ const {adminLogin, adminRegister} = require('../controllers/auth');
 const {auth} = require('../middlewares/authentication')
 const {register, verifyNewUser,login,googleRegister,
     forgotPassword,verifyToken,resetPassword} = require('../controllers/auth')
-const {createProfile,updateProfile} = require('../controllers/candidateProfile.controller')
+const {createProfile} = require('../controllers/candidateProfile.controller')
 
 // candidate auth route
 
 router.post('/register',[register,createProfile])
-router.patch('/register/verifyuser',auth,verifyNewUser);
+router.patch('/register/:token',verifyNewUser);
 router.post('/login',login)
 router.post('/forgotpassword',forgotPassword);
 router.get('/verifytoken/:token',verifyToken)
