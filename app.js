@@ -46,7 +46,7 @@ app.get('/api/v1/candidate',candidateRouter);
 
 // candidate router
 
-app.use('/api/v1/candidate', auth, candidateRouter);
+app.use('/api/v1/candidates', auth, candidateRouter);
 app.use("/api/v1/employers",auth, companyRouter);
 
 // company router 
@@ -54,7 +54,7 @@ app.use("/api/v1/employers",auth, companyRouter);
 app.use('/api/v1/dashboard/companyProfile',companyProfileRoutes);
 
 // admin router
-app.use('/api/v1/admin/dashboard', checkAdmin, adminRouter);
+app.use('/api/v1/admin', checkAdmin, adminRouter);
 
 const start = async () => {
   try {

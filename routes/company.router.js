@@ -1,17 +1,19 @@
 const express = require("express");
 const router = express.Router();
 const jobPostcontroller = require("../controllers/companyJob.controller");
-
 const profileController = require("../controllers/companyProfile.controller");
-//company job route
-router.post("/", jobPostcontroller.createJobsPost);;
-router.get("/",jobPostcontroller.getAllJobPost);
-router.get("/:id", jobPostcontroller.getJobPostByID);
-router.patch("/:id", jobPostcontroller.updateJobPostByID);
-router.delete("/:id", jobPostcontroller.deleteJobPostByID);
+
 
 //company profile route
 
-router.patch("/", profileController.updateProfile);
+router.patch("/profile", profileController.updateProfile);
+
+//company job route
+
+router.post("/job", jobPostcontroller.createJobsPost);;
+router.get("/job",jobPostcontroller.getAllJobPost);
+router.get("/job/:id", jobPostcontroller.getJobPostByID);
+router.patch("/job/:id", jobPostcontroller.updateJobPostByID);
+router.delete("/job/:id", jobPostcontroller.deleteJobPostByID);
 
 module.exports = router;

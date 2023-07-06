@@ -18,6 +18,7 @@ const userSchema = mongoose.Schema({
     password:{
         type:String,
         maxlength:50,
+        minLength:[5,'please enter at least 5 letters for password'],
         required:true
     },
     role:{
