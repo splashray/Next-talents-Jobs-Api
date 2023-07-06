@@ -4,7 +4,7 @@ const connectDB = require('./db/connect')
 const { auth, checkAdmin } = require('./middlewares/authentication')
 
 // for google login or register
-// const passport = require('passport')
+const passport = require('passport')
 
 const authRouter = require('./routes/auth')
 const adminRouter = require('./routes/admin');
@@ -15,18 +15,18 @@ const {errorHandlerMiddleware} = require('./middlewares/error-handler')
 
 const express = require('express');
 const app = express()
-// const session = require('express-session')
+const session = require('express-session')
 
 // middlewares
 app.use(errorHandlerMiddleware);
 app.use(express.json())
-// app.use(passport.initialize())
-// app.use(passport.session())
-// app.use(session({
-//   secret: process.env.SESSION_SECRET,
-//   resave: false,
-//   saveUninitialized: false
-// }));
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
 
 // routers
 
@@ -48,6 +48,10 @@ app.get('/api/v1/candidate',candidateRouter);
 
 app.use('/api/v1/candidates', auth, candidateRouter);
 app.use("/api/v1/employers",auth, companyRouter);
+
+// company router 
+
+app.use('/api/v1/dashboard/companyProfile',companyProfileRoutes);
 
 // admin router
 app.use('/api/v1/admin', checkAdmin, adminRouter);

@@ -6,6 +6,7 @@ const {adminLogin, adminRegister} = require('../controllers/auth');
 const {auth} = require('../middlewares/authentication')
 const {register, verifyNewUser,login,googleRegister,
     forgotPassword,verifyToken,resetPassword} = require('../controllers/auth')
+const {createProfileCompany} = require("../controllers/companyProfile.controller")
 const {createProfile} = require('../controllers/candidateProfile.controller')
 
 // candidate auth route
