@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
-// //Middleware
-// const isAdmin = require("../../middleware/adminMiddleware");
+const upload = require('../utils/multer')
+
+
+//Middleware
 
 const profileController = require("../controllers/candidateProfile.controller");
 const resumeController = require('../controllers/candidateResume.controller');
 
 // Update profile by ID
-router.patch("/profile", profileController.updateProfile);
-
+router.patch("/profile", upload.single('profile-pics'),
+profileController.uploadProfilePics,profileController.updateProfile);
 
 
 // GET /api/resumes

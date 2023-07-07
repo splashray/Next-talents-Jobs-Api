@@ -1,6 +1,7 @@
 const _ = require("lodash");
-const  Profile  = require("../models/companyprofile.model");
-const {StatusCodes} = require("http-status-codes");
+const Profile = require("../models/companyprofile.model");
+const { StatusCodes } = require("http-status-codes");
+const { imageUploader } = require('../utils/cloudinary')
 
 // Create a profile for a user
 
@@ -12,7 +13,7 @@ const createProfile = async (req, res) => {
 
   const newProfile = await Profile.create(req.body);
 
-  res.status(StatusCodes.CREATED).json({ user: userData, token: token,profile: newProfile });
+  res.status(StatusCodes.CREATED).json({ user: userData, token: token, profile: newProfile });
 };
 
 // Update a user profile
@@ -54,7 +55,29 @@ const updateProfile = async (req, res) => {
   }
 };
 
+const uploadProfilePics = async (req, res, next) => {
+  try {
+    const { userId: id } = req.user.userId
+    const User = await Profile.findOne({ id });
+    if (!User) {
+      throw new Error('user not found')
+    }
+    if (!req.file) {
+      return next()
+    }
+    const path = req.file.path;
+    const image = await imageUploader(User._id, path)
+    const saveProfilePics = await Profile.findOneAndUpdate({ user: id }, { profilePhoto: image },
+      { new: true, runValidators: true })
+    req.image = image;
+    next()
+  } catch (error) {
+    res.json(error.message);
+  }
+}
+
 module.exports = {
   createProfile,
   updateProfile,
+  uploadProfilePics
 };

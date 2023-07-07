@@ -64,10 +64,11 @@ const sendVerificationEmail = async ( {_id, email},link, res) => {
     });
     res.json({
         status:"PENDING",
-        Message:"verification otp sent",
+        Message:"verification email sent",
         Data:{
             userId: _id,
-            email:email
+            email:email,
+            link: link
         },
     })
 }
