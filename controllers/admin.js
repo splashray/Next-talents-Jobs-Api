@@ -1,7 +1,8 @@
 const { StatusCodes } = require('http-status-codes');
 const candidateProfiles = require('../models/candidateProfile.model');
 const candidateResumes = require('../models/candidateResume.model');
-const companyJob = require("../models/companyJob.model")
+const companyJobs = require("../models/companyJob.model")
+const  companyProfiles  = require("../models/companyprofile.model");
 const user = require('../models/user');
 const { NotFoundError } = require('../errors');
 
@@ -12,21 +13,25 @@ const getAllUsers = async (req,res)=>{
     res.status(StatusCodes.OK).json({Users:allUsers});
 }
 const getUser = async (req,res)=>{
-    const {userId:id} = req.params;
+    const {userId:id} = req.params.id;
     const Auser = await user.find({_id:id});
     const userResume = await candidateResumes.find({user:id});
     const userProfile = await candidateProfiles.find({user:id});
-    const companyJobs = await companyJob.find({user:id});
+    const companyJob = await companyJobs.find({user:id});
+    const companyprofile = await companyProfiles.find({user:id});
     if(!Auser){
       throw new  NotFoundError('user not found');  
     }
-    res.status(StatusCodes.OK).json({USER:Auser,UserProfile:userProfile,UserResume:userResume,CompanyJob:companyJobs});
+    res.status(StatusCodes.OK).json({USER:Auser,UserProfile:userProfile,UserResume:userResume,
+        Companyprofile:companyprofile,CompanyJob:companyJob});
 }
 const DeleteUser = async (req,res)=>{
-    const {userId:id} = req.params;
+    const {userId:id} = req.params.id;
     const Auser = await user.findOneAndDelete({_id:id});
     const userResume = await candidateResumes.findOneAndDelete({user:id});
     const userProfile = await candidateProfiles.findOneAndDelete({user:id});
+    const CompanyProfile = await companyProfiles.findOneAndDelete({user:id});
+    const companyJob = await companyJobs.findOneAndDelete({user:id});
     res.status(StatusCodes.OK).json('user deleted');
 }
 const getAllcandidates = async (req,res)=>{
@@ -47,6 +52,14 @@ const getAllProfile = async (req,res)=>{
     const profiles = await candidateProfiles.find({});
     res.status(StatusCodes.OK).json({PROFILES:profiles});
 }
+const getAllJobPost = async (req,res)=>{
+    const jobPosts = await companyJobs.find({});
+    res.status(StatusCodes.OK).json({JOB_POSTS:jobPosts});
+}
+const getAllCompanyProfiles = async (req,res)=>{
+    const profiles = await companyProfiles.find({});
+    res.status(StatusCodes.OK).json({COMPANY_PROFILES:profiles});
+}
 
 module.exports = {
     getAllUsers,
@@ -55,5 +68,7 @@ module.exports = {
     getAllcandidates,
     getAllCompanies,
     getAllResume,
-    getAllProfile
+    getAllProfile,
+    getAllCompanyProfiles,
+    getAllJobPost
 }

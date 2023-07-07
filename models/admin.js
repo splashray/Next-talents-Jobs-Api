@@ -20,10 +20,6 @@ const userSchema = mongoose.Schema({
         maxlength:50,
         required:true
     },
-    isVerified:{
-        type:Boolean,
-        default:false
-    }
 })
 userSchema.pre('save', async function(){
     const salt = await bcrypt.genSalt(10)

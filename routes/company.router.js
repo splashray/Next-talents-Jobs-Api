@@ -1,12 +1,16 @@
 const express = require("express");
 const router = express.Router();
+
+
+const upload = require('../utils/multer')
 const jobPostcontroller = require("../controllers/companyJob.controller");
 const profileController = require("../controllers/companyProfile.controller");
 
 
 //company profile route
 
-router.patch("/profile", profileController.updateProfile);
+router.patch("/profile", upload.single('profile-pics'),
+[profileController.uploadProfilePics,profileController.updateProfile]);
 
 //company job route
 

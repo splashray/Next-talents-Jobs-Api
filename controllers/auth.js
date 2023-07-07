@@ -4,8 +4,9 @@ const jwt = require('jsonwebtoken')
 const admin = require('../models/admin')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, UnauthenticatedError } = require('../errors')
-const { sendVerificationEmail, resendOtpVerificationCode, 
-    sendOtpVerificationEmail,otpVerification } = require('../utils/email');
+const candidateProfile = require("../models/candidateProfile.model");
+const companyProfile = require("../models/companyprofile.model");
+const { sendVerificationEmail, resendOtpVerificationCode } = require('../utils/email');
 const bcrypt = require('bcryptjs');
 
 const register = async (req, res, next) => {
@@ -13,28 +14,47 @@ const register = async (req, res, next) => {
         const USER = await user.create({ ...req.body })
         const token = USER.createJwt();
         const link = `${process.env.SITEURL}/auth/register/${token}`
-        await sendVerificationEmail({ _id: USER._id, email:USER.email }, link, res);
+        await sendVerificationEmail({ _id: USER._id, email: USER.email }, link, res);
         const email = USER.email
-        req.user = { userId: USER._id, User: USER }
+        req.user = { userId: USER._id, User: USER, role: USER.role }
         req.email = email
-        req.token = token
         next()
     } catch (error) {
         console.log(error);
     }
 }
+const createProfile = async (req, res) => {
+    const role = req.user.role
+    if (role === "company") {
+
+        req.body.user = req.user.userId;
+        req.body.email = req.email;
+        const userData = req.user.User;
+        const newProfile = await companyProfile.create(req.body);
+    }
+    req.body.user = req.user.userId;
+    req.body.email = req.email;
+    const userData = req.user.User;
+    const newProfile = await candidateProfile.create(req.body);
+}
 const verifyNewUser = async (req, res) => {
     try {
         const token = req.params.token;
-        const payload = jwt.verify(token,process.env.JWTSECRET)
-        const User = {userId:payload._id,email:payload.email}
-        if(!User){
+        const payload = jwt.verify(token, process.env.JWTSECRET)
+        const User = { userId: payload.userId, email: payload.email }
+        console.log(User);
+        if (!User) {
             throw new UnauthenticatedError("user not found")
         }
-        const foundUser = user.findOne({email:User.email});
-        await user.findOneAndUpdate({_id:User.userId},{isVerified:true},{new:true,runValidators: true})
+        console.log(User);
+        console.log(User.email);
+        email = User.email;
+        console.log(email);
+        const foundUser = await user.findOne({ email });
+        console.log(foundUser);
+        await user.findOneAndUpdate({ email }, { isVerified: true }, { new: true, runValidators: true })
         const newToken = await foundUser.createJwt();
-        res.status(StatusCodes.OK).json({message:"user is now verified",token:newToken});
+        res.status(StatusCodes.OK).json({ message: "user is now verified", token: newToken });
     } catch (error) {
         throw new UnauthenticatedError('unauthenticated')
     }
@@ -49,7 +69,7 @@ const login = async (req, res) => {
         throw new UnauthenticatedError('please provide a vailid email')
     }
     const isVerified = USER.isVerified;
-    if(!isVerified){
+    if (!isVerified) {
         throw new UnauthenticatedError('user is not verified kindly check your mail to verify')
     }
     const isPaswordCorrect = await USER.comparePassword(password);
@@ -62,7 +82,7 @@ const login = async (req, res) => {
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
-        if(!email){
+        if (!email) {
             throw new Error('please provide email')
         }
         const foundUser = await user.findOne({ email: email });
@@ -77,18 +97,18 @@ const forgotPassword = async (req, res) => {
         res.json({ error: error.message });
     }
 };
-const verifyToken = async (req,res)=>{
+const verifyToken = async (req, res) => {
     try {
         const token = req.params.token;
-        const payload = jwt.verify(token,process.env.JWTSECRET)
-        const User = {userId:payload._id,email:payload.email}
-        if(!User){
+        const payload = jwt.verify(token, process.env.JWTSECRET)
+        const User = { userId: payload._id, email: payload.email }
+        if (!User) {
             throw new UnauthenticatedError("user not found")
         }
         const email = User.email
-        const foundUser = await user.findOne({email:email})
+        const foundUser = await user.findOne({ email: email })
         const newToken = await foundUser.createJwt();
-        res.status(StatusCodes.OK).json({message:"verified user",token:newToken});
+        res.status(StatusCodes.OK).json({ message: "verified user", token: newToken });
     } catch (error) {
         throw new UnauthenticatedError('unauthenticated')
     }
@@ -141,7 +161,7 @@ const adminRegister = async (req, res, next) => {
 const adminLogin = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
-        throw new BadRequestError('please provide email and password')
+        return new BadRequestError('please provide email and password')
     }
     const ADMIN = await admin.findOne({ email })
     if (!ADMIN) {
@@ -154,5 +174,8 @@ const adminLogin = async (req, res) => {
     const token = ADMIN.createJwt()
     res.status(StatusCodes.OK).json({ ADMIN, token: token })
 }
-module.exports = { register, verifyNewUser, login, googleRegister,
-     adminLogin, adminRegister,forgotPassword,verifyToken, resetPassword }
+module.exports = {
+    register, createProfile, verifyNewUser, login,
+    googleRegister, adminLogin, adminRegister,
+    forgotPassword, verifyToken, resetPassword
+}

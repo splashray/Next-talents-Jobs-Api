@@ -1,6 +1,7 @@
 const _ = require("lodash");
-const  Profile  = require("../models/candidateProfile.model");
-const {StatusCodes} = require("http-status-codes");
+const Profile = require("../models/candidateProfile.model");
+const { StatusCodes } = require("http-status-codes");
+const { imageUploader } = require('../utils/cloudinary')
 
 // Create a profile for a user
 
@@ -17,7 +18,6 @@ const updateProfile = async (req, res) => {
   try {
     const {
       username,
-      profilePhoto,
       skills,
       location,
       sallary,
@@ -29,6 +29,8 @@ const updateProfile = async (req, res) => {
       workExperience,
       awards,
     } = req.body;
+    req.body.profilePhoto = req.user.image
+    console.log(req.body.profilePhoto);
     const updatedProfile = await Profile.findOneAndUpdate(
       { user: req.user.userId },
       {
@@ -47,8 +49,8 @@ const updateProfile = async (req, res) => {
       },
       { new: true, runValidators: true }
     );
-
-    res.status(StatusCodes.OK).json({ updatedProfile });
+    const image = req.image
+    res.status(StatusCodes.OK).json({ updatedProfile, imageUrl: profilePhoto });
   } catch (error) {
     console.error(error);
     res
@@ -56,8 +58,31 @@ const updateProfile = async (req, res) => {
       .json({ error: "Server Error" });
   }
 };
+const uploadProfilePics = async (req, res, next) => {
+  try {
+    const { userId: id } = req.user.userId
+    const User = await Profile.findOne({ id });
+    if (!User) {
+      throw new Error('user not found')
+    }
+    console.log(req.file);
+    if (!req.file) {
+      return next()
+    }
+    const path = req.file.path;
+    const image = await imageUploader(User._id, path)
+    const saveProfilePics = await Profile.findOneAndUpdate({ user: id }, { profilePhoto: image },
+      { new: true, runValidators: true })
+    req.user.image = image;
+    console.log(image);
+    next()
+  } catch (error) {
+    res.json(error.message);
+  }
+}
 
 module.exports = {
   createProfile,
   updateProfile,
+  uploadProfilePics
 };
