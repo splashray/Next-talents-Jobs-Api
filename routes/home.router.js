@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {getUser,getAllCompanies,getAllcandidates} = require('../controllers/admin')
+const {candidateList,jobList,getUser,companyList} = require('../controllers/home.controller')
 
-router.get('/candidates',getAllcandidates)
-router.get('/employers',getAllCompanies)
+router.get('/candidate',candidateList)
+router.get('/job',jobList)
+router.get('/company',companyList)
 router.get('/user/:id',getUser)
 
 module.exports = router;

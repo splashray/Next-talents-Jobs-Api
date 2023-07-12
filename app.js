@@ -12,30 +12,29 @@ const adminRouter = require('./routes/admin');
 const candidateRouter = require("./routes/candidate.router");
 const companyRouter = require("./routes/company.router");
 // const asyncErrors = require('express-async-errors')
-const {errorHandlerMiddleware} = require('./middlewares/error-handler')
+const errorHandlerMiddleware = require('./middlewares/error-handler')
 
 const express = require('express');
 const app = express()
 // const session = require('express-session')
 
 // middlewares
-app.use(errorHandlerMiddleware);
 app.use(express.json())
 // app.use(passport.initialize())
 // app.use(passport.session())
 // app.use(session({
-//   secret: process.env.SESSION_SECRET,
-//   resave: false,
-//   saveUninitialized: false
-// }));
-
-// routers
-
-// auth router
-
-app.use('/api/v1/auth', authRouter);
-app.use('/google', authRouter);
-
+  //   secret: process.env.SESSION_SECRET,
+  //   resave: false,
+  //   saveUninitialized: false
+  // }));
+  
+  // routers
+  
+  // auth router
+  
+  app.use('/api/v1/auth', authRouter);
+  app.use('/google', authRouter);
+  
 // home router
 
 app.use('/api/v1',homeRouter);
@@ -48,6 +47,8 @@ app.use("/api/v1/employers",auth, companyRouter);
 
 // admin router
 app.use('/api/v1/admin', checkAdmin, adminRouter);
+
+app.use(errorHandlerMiddleware);
 
 const start = async () => {
   try {

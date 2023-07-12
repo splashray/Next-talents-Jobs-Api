@@ -1,18 +1,18 @@
+const { NotFoundError } = require('../errors');
 const Resume = require('../models/candidateResume.model');
 
 // Get all resumes
-async function getAllResumes(req, res) {
+async function getAllResumes(req, res,next) {
   try {
     const resumes = await Resume.find();
     res.json({resumes});
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
+    next(error);
+}
 }
 
 // Create a new resume
-async function createResume(req, res) {
+async function createResume(req, res,next) {
   try {
     const { user,title, contact, summary, education, experience, skills, certifications } = req.body;
 
@@ -30,29 +30,26 @@ async function createResume(req, res) {
     const savedResume = await newResume.save();
     res.status(201).json({ message: 'Resume created successfully', resume: savedResume });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
+    next(error);
+}
 }
 
 // Get a single resume by ID
-async function getResumeById(req, res) {
+async function getResumeById(req, res,next) {
   try {
     const resume = await Resume.findById(req.params.id);
 
     if (!resume) {
-      return res.status(404).json({ message: 'Resume not found' });
+      return new NotFoundError('Resume not found');
     }
-
     res.json(resume);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
+    next(error);
+}
 }
 
 // Update a resume
-async function updateResume(req, res) {
+async function updateResume(req, res,next) {
   try {
     const { title,contact,summary, education, experience, skills, certifications } = req.body;
 
@@ -70,31 +67,29 @@ async function updateResume(req, res) {
     const resume = await Resume.findOneAndUpdate({user}, updatedResume, { new: true, runValidators: true });
 
     if (!resume) {
-      return res.status(404).json({ message: 'Resume not found' });
+      return new NotFoundError('Resume not found');
     }
 
     res.json({ message: 'Resume updated successfully', resume });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
+    next(error);
+}
 }
 
 // Delete a resume
-async function deleteResume(req, res) {
+async function deleteResume(req, res, next) {
   try {
     const user = req.user.userId;
     const resume = await Resume.findOneAndDelete({user});
 
     if (!resume) {
-      return res.status(404).json({ message: 'Resume not found' });
+      return new NotFoundError('Resume not found');
     }
 
     res.json({ message: 'Resume deleted successfully' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
+    next(error);
+}
 }
 
 module.exports = {
