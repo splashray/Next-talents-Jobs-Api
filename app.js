@@ -53,7 +53,7 @@ app.use('/api/v1/admin', checkAdmin, adminRouter);
 
 app.use(errorHandlerMiddleware);
 
-const PORT = 3000 || process.env.PORT
+const PORT = process.env.PORT || 3000
 
 const start = async () => {
   try {
