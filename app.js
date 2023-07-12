@@ -53,10 +53,12 @@ app.use('/api/v1/admin', checkAdmin, adminRouter);
 
 app.use(errorHandlerMiddleware);
 
+const PORT = 3000 || process.env.PORT
+
 const start = async () => {
   try {
     await connectDB(process.env.MONGOURI);
-    app.listen(3000, () => console.log(`app is listening on port 3000...`));
+    app.listen(PORT, () => console.log(`app is listening on port 3000...`));
   } catch (error) {
     console.log(error);
   }
