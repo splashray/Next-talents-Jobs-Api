@@ -1,7 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const candidateProfiles = require('../models/candidateProfile.model');
 const candidateResumes = require('../models/candidateResume.model');
-const companyJobs = require("../models/companyJob.model")
+const companyJobs = require("../models/companyJob.model");
 const  companyProfiles  = require("../models/companyprofile.model");
 const user = require('../models/user');
 const { NotFoundError } = require('../errors');
@@ -18,12 +18,12 @@ const getUser = async (req,res)=>{
     const userResume = await candidateResumes.find({user:id});
     const userProfile = await candidateProfiles.find({user:id});
     const companyJob = await companyJobs.find({user:id});
-    const companyprofile = await companyProfiles.find({user:id});
+    const companyProfile = await companyProfiles.find({user:id});
     if(!Auser){
       throw new  NotFoundError('user not found');  
     }
     res.status(StatusCodes.OK).json({USER:Auser,UserProfile:userProfile,UserResume:userResume,
-        Companyprofile:companyprofile,CompanyJob:companyJob});
+        Companyprofile:companyProfile,CompanyJob:companyJob});
 }
 const DeleteUser = async (req,res)=>{
     const {userId:id} = req.params.id;

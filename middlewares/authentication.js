@@ -31,12 +31,12 @@ const checkAdmin = async (req,res, next)=>{
         const temp = payload.adminId;
         const Admin = await admin.find({temp});
         if(!Admin){
-            throw new UnauthenticatedError('unthentication invalid');
+            throw new UnauthenticatedError('authentication invalid');
         }
         req.admin = {adminId:payload.adminId,adminName:payload.adminName}
         next()
     } catch (error) {
-        throw new UnauthenticatedError('unthentication invalid')
+        throw new UnauthenticatedError('authentication invalid')
     }
 }
 
