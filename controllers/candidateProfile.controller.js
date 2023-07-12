@@ -14,7 +14,7 @@ const createProfile = async (req, res) => {
 };
 
 // Update a user profile
-const updateProfile = async (req, res) => {
+const updateProfile = async (req, res, next) => {
   try {
     const {
       username,
@@ -29,13 +29,10 @@ const updateProfile = async (req, res) => {
       workExperience,
       awards,
     } = req.body;
-    req.body.profilePhoto = req.user.image
-    console.log(req.body.profilePhoto);
     const updatedProfile = await Profile.findOneAndUpdate(
       { user: req.user.userId },
       {
         username,
-        profilePhoto,
         skills,
         location,
         sallary,
@@ -49,37 +46,27 @@ const updateProfile = async (req, res) => {
       },
       { new: true, runValidators: true }
     );
-    const image = req.image
-    res.status(StatusCodes.OK).json({ updatedProfile, imageUrl: profilePhoto });
+    res.status(StatusCodes.OK).json({ updatedProfile });
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Server Error" });
-  }
-};
-const uploadProfilePics = async (req, res, next) => {
-  try {
-    const { userId: id } = req.user.userId
-    const User = await Profile.findOne({ id });
-    if (!User) {
-      throw new Error('user not found')
-    }
-    console.log(req.file);
-    if (!req.file) {
-      return next()
-    }
-    const path = req.file.path;
-    const image = await imageUploader(User._id, path)
-    const saveProfilePics = await Profile.findOneAndUpdate({ user: id }, { profilePhoto: image },
-      { new: true, runValidators: true })
-    req.user.image = image;
-    console.log(image);
-    next()
-  } catch (error) {
-    res.json(error.message);
+    next(error);
   }
 }
+const uploadProfilePics = async (req, res, next) => {
+  try {
+    const id = req.user.userId
+    const path = req.file.path;
+    console.log(path);
+    console.log(id);
+    const image = await imageUploader(id, path)
+    const saveProfilePics = await Profile.findOneAndUpdate({ user: id }, { profilePhoto: image },
+      { new: true, runValidators: true })
+    console.log(image);
+    res.status(StatusCodes.OK).json({ saveProfilePics });
+  } catch (error) {
+    next(error);
+  }
+}
+
 
 module.exports = {
   createProfile,

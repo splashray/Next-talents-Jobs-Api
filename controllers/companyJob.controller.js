@@ -2,29 +2,28 @@ const JobPost = require("../models/companyJob.model");
 const _ = require("lodash");
 
 // Controller for creating job post
-const createJobsPost = async (req, res) => {
+const createJobsPost = async (req, res,next) => {
   try {
     const jobPost = new JobPost(req.body);
     const savedJobPost = await jobPost.save();
     res.status(201).json(savedJobPost);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ err: "Failed to create the job post" });
-  }
-};
+  } catch (error) {
+    next(error);
+}
+}
 //controller for getting all job post
-const getAllJobPost = async (req, res) => {
+const getAllJobPost = async (req, res,next) => {
   try {
     const company = req.user.userId
     const companyId = _.toString(company).trim();
     const getSavedJobs = await JobPost.find({ user: companyId }); // Get all saved job post from the DB
     res.status(200).json(getSavedJobs);
-  } catch (err) {
-    res.status(500).json({ err: "failed to fetch all job posts" });
-  }
-};
+  } catch (error) {
+    next(error);
+}
+}
 // Controller to get a specific job post by ID
-const getJobPostByID = async (req, res) => {
+const getJobPostByID = async (req, res,next) => {
   try {
     const userId = req.user.userId;
     const jobId = _.toString(req.params.id).trim();
@@ -37,13 +36,12 @@ const getJobPostByID = async (req, res) => {
       res.status(404).json("Jobs post not found");
     }
     res.status(200).json(getJobPost);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ err: "Failed to fetch this job post" });
-  }
-};
+  } catch (error) {
+    next(error);
+}
+}
 // Controller to update a job post by ID
-const updateJobPostByID = async (req, res) => {
+const updateJobPostByID = async (req, res,next) => {
   try {
     const userId = req.user.userId;
     const jobId = _.toString(req.params.id).trim();
@@ -60,13 +58,12 @@ const updateJobPostByID = async (req, res) => {
       return res.status(404).json("Job post not found");
     }
     res.status(200).json(updatedJobPost);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ err: "Failed to update job post" });
-  }
-};
+  } catch (error) {
+    next(error);
+}
+}
 // Controller to delete a job post by ID
-const deleteJobPostByID = async (req, res) => {
+const deleteJobPostByID = async (req, res,next) => {
   try {
     const userId = req.user.userId;
     const jobId = _.toString(req.params.id).trim();
@@ -80,10 +77,10 @@ const deleteJobPostByID = async (req, res) => {
       return res.status(404).json({ error: "Job post not found" });
     }
     res.json(deletedJobPost);
-  } catch (err) {
-    res.status(500).json({ err: "Failed to delete job post" });
-  }
-};
+  } catch (error) {
+    next(error);
+}
+}
 module.exports = {
   createJobsPost,
   getAllJobPost,
