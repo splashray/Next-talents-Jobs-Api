@@ -37,6 +37,9 @@ app.use(express.json())
   
 // home router
 
+app.get('/api/v1',(req,res)=>{
+  res.send('welcome to next-talents-job-api service');
+});
 app.use('/api/v1',homeRouter);
 
 
@@ -50,10 +53,12 @@ app.use('/api/v1/admin', checkAdmin, adminRouter);
 
 app.use(errorHandlerMiddleware);
 
+const PORT = 3000 || process.env.PORT
+
 const start = async () => {
   try {
     await connectDB(process.env.MONGOURI);
-    app.listen(3000, () => console.log(`app is listening on port 3000...`));
+    app.listen(PORT, () => console.log(`app is listening on port 3000...`));
   } catch (error) {
     console.log(error);
   }
