@@ -1,7 +1,7 @@
-require('dotenv').config()
-require('./utils/googleOauth2')
-const connectDB = require('./db/connect')
-const { auth, checkAdmin } = require('./middlewares/authentication')
+ require('dotenv').config()
+ require('./utils/googleOauth2')
+ const connectDB = require('./db/connect')
+ const { auth, checkAdmin } = require('./middlewares/authentication')
 
 // for google login or register
 // const passport = require('passport')
@@ -43,7 +43,7 @@ app.use('/api/v1',homeRouter);
 
 // user router
 
-app.use('/api/v1/candidates', auth, candidateRouter);
+app.use('/api/v1/candidates',auth, candidateRouter); 
 app.use("/api/v1/employers",auth, companyRouter);
 
 // admin router

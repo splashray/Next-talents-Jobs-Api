@@ -77,7 +77,7 @@ const uploadProfilePics = async (req, res, next) => {
     console.log(image);
     next()
   } catch (error) {
-    res.json(error.message);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
   }
 }
 

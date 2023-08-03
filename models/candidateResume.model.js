@@ -1,34 +1,39 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const resumeSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
+  // user: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User",
+  //   required: true,
+  // },
+  user: String,
   title: {
     type: String,
     required: true,
   },
-  contact:[
+  contact: [
     {
-    email: {
-      type: String,
-      required:[true,'please provide email'],
-      match:[/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,'please provide valid email'],
-      unique:true
+      email: {
+        type: String,
+        required: [true, "please provide email"],
+        match: [
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          "please provide valid email",
+        ],
+        unique: true,
+      },
+      phone: {
+        type: String,
+        required: true,
+      },
+      address: {
+        type: String,
+        required: true,
+      },
     },
-    phone: {
-      type: String,
-      required: true,
-    },
-    address:{
-      type: String,
-      required:true,
-    },
-  },
-],
-  
+  ],
+
   summary: {
     type: String,
     required: true,
@@ -85,6 +90,7 @@ const resumeSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+resumeSchema.plugin(mongoosePaginate);
 
 const Resume = mongoose.model("Resume", resumeSchema);
 

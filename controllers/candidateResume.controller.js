@@ -1,23 +1,55 @@
-const Resume = require('../models/candidateResume.model');
+const { StatusCodes } = require("http-status-codes");
+const Resume = require("../models/candidateResume.model");
 
 // Get all resumes
 async function getAllResumes(req, res) {
   try {
-    const resumes = await Resume.find();
-    res.json({resumes});
+    // const resumes = await Resume.find();
+    //Pagination.....
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const options = {
+      page,
+      limit,
+    };
+
+    const { docs, totalDocs, hasNextPage, hasPrevPage, nextPage, prevPage } =
+      await Resume.paginate({}, options);
+    const results = {
+      totalDocs,
+      hasNextPage,
+      hasPrevPage,
+      nextPage,
+      prevPage,
+      results: docs,
+    };
+
+    res.status(StatusCodes.OK).json(results);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Server Error" });
   }
 }
 
 // Create a new resume
 async function createResume(req, res) {
   try {
-    const { user,title, contact, summary, education, experience, skills, certifications } = req.body;
+    const {
+      user,
+      title,
+      contact,
+      summary,
+      education,
+      experience,
+      skills,
+      certifications,
+    } = req.body;
 
     const newResume = new Resume({
-      user:req.user.userId,
+      user: req.user.userId,
       title,
       contact,
       summary,
@@ -28,10 +60,12 @@ async function createResume(req, res) {
     });
 
     const savedResume = await newResume.save();
-    res.status(201).json({ message: 'Resume created successfully', resume: savedResume });
+    res
+      .status(StatusCodes.CREATED)
+      .json({ message: "Resume created successfully", resume: savedResume });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Server Error" });
   }
 }
 
@@ -41,20 +75,28 @@ async function getResumeById(req, res) {
     const resume = await Resume.findById(req.params.id);
 
     if (!resume) {
-      return res.status(404).json({ message: 'Resume not found' });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "Resume not found" });
     }
 
-    res.json(resume);
+    res.status(StatusCodes.OK).json(resume);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Server Error" });
   }
 }
 
 // Update a resume
 async function updateResume(req, res) {
   try {
-    const { title,contact,summary, education, experience, skills, certifications } = req.body;
+    const {
+      title,
+      contact,
+      summary,
+      education,
+      experience,
+      skills,
+      certifications,
+    } = req.body;
 
     const updatedResume = {
       title,
@@ -67,16 +109,19 @@ async function updateResume(req, res) {
     };
     const user = req.user.userId;
 
-    const resume = await Resume.findOneAndUpdate({user}, updatedResume, { new: true, runValidators: true });
+    const resume = await Resume.findOneAndUpdate({ user }, updatedResume, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!resume) {
-      return res.status(404).json({ message: 'Resume not found' });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "Resume not found" });
     }
 
-    res.json({ message: 'Resume updated successfully', resume });
+    res.status(StatusCodes.CREATED).json({ message: "Resume updated successfully", resume });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Server Error" });
   }
 }
 
@@ -84,16 +129,16 @@ async function updateResume(req, res) {
 async function deleteResume(req, res) {
   try {
     const user = req.user.userId;
-    const resume = await Resume.findOneAndDelete({user});
+    const resume = await Resume.findOneAndDelete({ user });
 
     if (!resume) {
-      return res.status(404).json({ message: 'Resume not found' });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "Resume not found" });
     }
 
-    res.json({ message: 'Resume deleted successfully' });
+    res.status(StatusCodes.GONE).json({ message: "Resume deleted successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Server Error" });
   }
 }
 
