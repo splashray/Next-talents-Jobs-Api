@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const profileSchema = new mongoose.Schema({
   user: {
@@ -55,6 +56,8 @@ const profileSchema = new mongoose.Schema({
     default: "",
   },
 });
+
+profileSchema.plugin(mongoosePaginate);
 
 const Profile = mongoose.model("candidateProfile", profileSchema);
 

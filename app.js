@@ -1,7 +1,7 @@
-require('dotenv').config()
-require('./utils/googleOauth2')
-const connectDB = require('./db/connect')
-const { auth, checkAdmin } = require('./middlewares/authentication')
+  require('dotenv').config()
+// //  require('./utils/googleOauth2')
+ const connectDB = require('./db/connect')
+ const { auth, checkAdmin } = require('./middlewares/authentication')
 
 // for google login or register
 // const passport = require('passport')
@@ -33,8 +33,9 @@ app.use(express.json())
   // auth router
   
   app.use('/api/v1/auth', authRouter);
-  app.use('/google', authRouter);
-  
+
+  // app.use('/google', authRouter);
+
 // home router
 
 app.get('/api/v1',(req,res)=>{
@@ -45,11 +46,15 @@ app.use('/api/v1',homeRouter);
 
 // user router
 
-app.use('/api/v1/candidates', auth, candidateRouter);
-app.use("/api/v1/employers",auth, companyRouter);
+app.use('/api/v1/candidates', candidateRouter); 
+app.use("/api/v1/employers", companyRouter);
 
 // admin router
-app.use('/api/v1/admin', checkAdmin, adminRouter);
+app.use('/api/v1/admin',  adminRouter);
+
+app.use(errorHandlerMiddleware);
+
+const PORT = process.env.PORT || 3000
 
 app.use(errorHandlerMiddleware);
 
@@ -58,7 +63,8 @@ const PORT = 3000 || process.env.PORT
 const start = async () => {
   try {
     await connectDB(process.env.MONGOURI);
-    app.listen(PORT, () => console.log(`app is listening on port 3000...`));
+    app.listen(PORT, () => console.log(`app is listening on port ${PORT}...`));
+
   } catch (error) {
     console.log(error);
   }

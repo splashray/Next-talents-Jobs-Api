@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const jobPostSchema = new mongoose.Schema(
   {
@@ -113,6 +114,8 @@ const jobPostSchema = new mongoose.Schema(
   },
   { required: true }
 );
+
+jobPostSchema.plugin(mongoosePaginate);
 
 const JobPost = mongoose.model("JobPost", jobPostSchema);
 
