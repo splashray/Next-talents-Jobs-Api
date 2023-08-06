@@ -2,7 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const Resume = require("../models/candidateResume.model");
 
 // Get all resumes
-async function getAllResumes(req, res) {
+async function getAllResumes(req, res,next) {
   try {
     // const resumes = await Resume.find();
     //Pagination.....
@@ -35,7 +35,7 @@ async function getAllResumes(req, res) {
 }
 
 // Create a new resume
-async function createResume(req, res) {
+async function createResume(req, res,next) {
   try {
     const {
       user,
@@ -70,7 +70,7 @@ async function createResume(req, res) {
 }
 
 // Get a single resume by ID
-async function getResumeById(req, res) {
+async function getResumeById(req, res,next) {
   try {
     const resume = await Resume.findById(req.params.id);
 
@@ -86,7 +86,7 @@ async function getResumeById(req, res) {
 }
 
 // Update a resume
-async function updateResume(req, res) {
+async function updateResume(req, res,next) {
   try {
     const {
       title,
@@ -126,7 +126,7 @@ async function updateResume(req, res) {
 }
 
 // Delete a resume
-async function deleteResume(req, res) {
+async function deleteResume(req, res, next) {
   try {
     const user = req.user.userId;
     const resume = await Resume.findOneAndDelete({ user });

@@ -9,8 +9,8 @@ const profileController = require("../controllers/companyProfile.controller");
 
 //company profile route
 
-router.patch("/profile", upload.single('profile-pics'),
-[profileController.uploadProfilePics,profileController.updateProfile]);
+router.patch("/profile/upload", upload.single('profile-pics'),profileController.uploadProfilePics);
+router.patch("/profile",profileController.updateProfile);
 
 //company job route
 

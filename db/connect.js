@@ -12,7 +12,7 @@ const connectDB = async () => {
     .catch((err) => console.error("Could not connect to mongoDB", err));
 };
 
-//...........................................
+// ...........................................
 // const connectDB = (url) => {
 //   return mongoose.connect(url, {
 //     useNewUrlParser: true,

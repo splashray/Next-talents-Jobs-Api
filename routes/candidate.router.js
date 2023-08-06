@@ -9,8 +9,8 @@ const profileController = require("../controllers/candidateProfile.controller");
 const resumeController = require('../controllers/candidateResume.controller');
 
 // Update profile by ID
-router.patch("/profile", upload.single('profile-pics'),
-profileController.uploadProfilePics,profileController.updateProfile);
+router.patch("/profile/upload", upload.single('profile-pics'),profileController.uploadProfilePics);
+router.patch("/profile",profileController.updateProfile);
 
 
 // GET /api/resumes

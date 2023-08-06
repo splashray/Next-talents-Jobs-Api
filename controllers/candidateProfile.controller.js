@@ -14,7 +14,7 @@ const createProfile = async (req, res) => {
 };
 
 // Update a user profile
-const updateProfile = async (req, res) => {
+const updateProfile = async (req, res, next) => {
   try {
     const {
       username,
@@ -29,13 +29,10 @@ const updateProfile = async (req, res) => {
       workExperience,
       awards,
     } = req.body;
-    req.body.profilePhoto = req.user.image
-    console.log(req.body.profilePhoto);
     const updatedProfile = await Profile.findOneAndUpdate(
       { user: req.user.userId },
       {
         username,
-        profilePhoto,
         skills,
         location,
         sallary,
@@ -49,8 +46,7 @@ const updateProfile = async (req, res) => {
       },
       { new: true, runValidators: true }
     );
-    const image = req.image
-    res.status(StatusCodes.OK).json({ updatedProfile, imageUrl: profilePhoto });
+    res.status(StatusCodes.OK).json({ updatedProfile });
   } catch (error) {
     console.error(error);
     res
@@ -80,6 +76,7 @@ const uploadProfilePics = async (req, res, next) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
   }
 }
+
 
 module.exports = {
   createProfile,

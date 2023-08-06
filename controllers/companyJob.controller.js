@@ -3,7 +3,7 @@ const JobPost = require("../models/companyJob.model");
 const _ = require("lodash");
 
 // Controller for creating job post
-const createJobsPost = async (req, res) => {
+const createJobsPost = async (req, res,next) => {
   try {
     const jobPost = new JobPost(req.body);
     const savedJobPost = await jobPost.save();
@@ -16,10 +16,11 @@ const createJobsPost = async (req, res) => {
   }
 };
 //controller for getting all job post
-const getAllJobPost = async (req, res) => {
+const getAllJobPost = async (req, res,next) => {
   try {
-    const company = req.user.userId;
-    const companyId = _.toString(company).trim();
+     const company = req.user.userId;
+      const companyId = _.toString(company).trim();
+    // const companyId = "64cd1b15e4fc132db1781031";
     //Pagination.....
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -42,13 +43,14 @@ const getAllJobPost = async (req, res) => {
     // const getSavedJobs = await JobPost.find({ user: companyId }); // Get all saved job post from the DB
     res.status(StatusCodes.OK).json(results);
   } catch (err) {
+    console.log(err)
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ err: "failed to fetch all job posts" });
+      .json({ err: "failed to fecht job posts" });
   }
 };
 // Controller to get a specific job post by ID
-const getJobPostByID = async (req, res) => {
+const getJobPostByID = async (req, res,next) => {
   try {
     const userId = req.user.userId;
     const jobId = _.toString(req.params.id).trim();
@@ -68,7 +70,7 @@ const getJobPostByID = async (req, res) => {
   }
 };
 // Controller to update a job post by ID
-const updateJobPostByID = async (req, res) => {
+const updateJobPostByID = async (req, res,next) => {
   try {
     const userId = req.user.userId;
     const jobId = _.toString(req.params.id).trim();
@@ -92,7 +94,7 @@ const updateJobPostByID = async (req, res) => {
   }
 };
 // Controller to delete a job post by ID
-const deleteJobPostByID = async (req, res) => {
+const deleteJobPostByID = async (req, res,next) => {
   try {
     const userId = req.user.userId;
     const jobId = _.toString(req.params.id).trim();
