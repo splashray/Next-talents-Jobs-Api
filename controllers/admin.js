@@ -7,6 +7,7 @@ const user = require("../models/user");
 const { NotFoundError } = require("../errors");
 const handlePaginatedResults = require("../utils/handlePaginatedResults");
 
+
 const getAllUsers = async (req, res) => {
   handlePaginatedResults(res, "Users", async () => {
     const allUsers = await user.find({});
@@ -30,7 +31,6 @@ const getUser = async (req, res) => {
     const userProfile = await userProfileQuery;
     const companyJob = await companyJobQuery;
     const companyprofile = await companyprofileQuery;
-
     res.status(StatusCodes.OK).json({
       USER: Auser,
       UserProfile: userProfile,

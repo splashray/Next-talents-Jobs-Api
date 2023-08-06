@@ -1,5 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
-const Resume = require("../models/candidateResume.model");
+const { NotFoundError } = require('../errors');
+const Resume = require('../models/candidateResume.model');
 
 // Get all resumes
 async function getAllResumes(req, res,next) {
@@ -27,11 +28,8 @@ async function getAllResumes(req, res,next) {
 
     res.status(StatusCodes.OK).json(results);
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Server Error" });
-  }
+    next(error);
+}
 }
 
 // Create a new resume
@@ -64,9 +62,8 @@ async function createResume(req, res,next) {
       .status(StatusCodes.CREATED)
       .json({ message: "Resume created successfully", resume: savedResume });
   } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Server Error" });
-  }
+    next(error);
+}
 }
 
 // Get a single resume by ID
@@ -75,14 +72,12 @@ async function getResumeById(req, res,next) {
     const resume = await Resume.findById(req.params.id);
 
     if (!resume) {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: "Resume not found" });
+      return new NotFoundError('Resume not found');
     }
-
     res.status(StatusCodes.OK).json(resume);
   } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Server Error" });
-  }
+    next(error);
+}
 }
 
 // Update a resume
@@ -115,14 +110,13 @@ async function updateResume(req, res,next) {
     });
 
     if (!resume) {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: "Resume not found" });
+      return new NotFoundError('Resume not found');
     }
 
     res.status(StatusCodes.CREATED).json({ message: "Resume updated successfully", resume });
   } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Server Error" });
-  }
+    next(error);
+}
 }
 
 // Delete a resume
@@ -132,14 +126,13 @@ async function deleteResume(req, res, next) {
     const resume = await Resume.findOneAndDelete({ user });
 
     if (!resume) {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: "Resume not found" });
+      return new NotFoundError('Resume not found');
     }
 
     res.status(StatusCodes.GONE).json({ message: "Resume deleted successfully" });
   } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Server Error" });
-  }
+    next(error);
+}
 }
 
 module.exports = {

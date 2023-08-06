@@ -8,12 +8,9 @@ const createJobsPost = async (req, res,next) => {
     const jobPost = new JobPost(req.body);
     const savedJobPost = await jobPost.save();
     res.status(StatusCodes.CREATED).json(savedJobPost);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ err: "Failed to create the job post" });
-  }
+ } catch (error) {
+    next(error);
+}
 };
 //controller for getting all job post
 const getAllJobPost = async (req, res,next) => {
@@ -42,12 +39,9 @@ const getAllJobPost = async (req, res,next) => {
     };
     // const getSavedJobs = await JobPost.find({ user: companyId }); // Get all saved job post from the DB
     res.status(StatusCodes.OK).json(results);
-  } catch (err) {
-    console.log(err)
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ err: "failed to fecht job posts" });
-  }
+  } catch (error) {
+    next(error);
+}
 };
 // Controller to get a specific job post by ID
 const getJobPostByID = async (req, res,next) => {
@@ -62,13 +56,10 @@ const getJobPostByID = async (req, res,next) => {
       res.status(StatusCodes.NOT_FOUND).json("Jobs post not found");
     }
     res.status(StatusCodes.OK).json(getJobPost);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ err: "Failed to fetch this job post" });
-  }
-};
+  } catch (error) {
+    next(error);
+}
+}
 // Controller to update a job post by ID
 const updateJobPostByID = async (req, res,next) => {
   try {
@@ -86,13 +77,10 @@ const updateJobPostByID = async (req, res,next) => {
       return res.status(StatusCodes.NOT_FOUND).json("Job post not found");
     }
     res.status(StatusCodes.OK).json(updatedJobPost);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ err: "Failed to update job post" });
-  }
-};
+  } catch (error) {
+    next(error);
+}
+}
 // Controller to delete a job post by ID
 const deleteJobPostByID = async (req, res,next) => {
   try {
@@ -108,13 +96,11 @@ const deleteJobPostByID = async (req, res,next) => {
         .status(StatusCodes.NOT_FOUND)
         .json({ error: "Job post not found" });
     }
-    res.status(StatusCodes.GONE).json(deletedJobPost);
-  } catch (err) {
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ err: "Failed to delete job post" });
-  }
-};
+     res.status(StatusCodes.GONE).json(deletedJobPost);
+  } catch (error) {
+    next(error);
+}
+}
 module.exports = {
   createJobsPost,
   getAllJobPost,

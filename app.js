@@ -33,8 +33,9 @@ app.use(express.json())
   // auth router
   
   app.use('/api/v1/auth', authRouter);
+
   // app.use('/google', authRouter);
-  
+
 // home router
 
 app.get('/api/v1',(req,res)=>{
@@ -55,10 +56,15 @@ app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 3000
 
+app.use(errorHandlerMiddleware);
+
+const PORT = 3000 || process.env.PORT
+
 const start = async () => {
   try {
     await connectDB(process.env.MONGOURI);
     app.listen(PORT, () => console.log(`app is listening on port ${PORT}...`));
+
   } catch (error) {
     console.log(error);
   }

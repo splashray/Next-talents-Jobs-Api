@@ -48,32 +48,22 @@ const updateProfile = async (req, res, next) => {
     );
     res.status(StatusCodes.OK).json({ updatedProfile });
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Server Error" });
+    next(error);
   }
-};
+}
 const uploadProfilePics = async (req, res, next) => {
   try {
-    const { userId: id } = req.user.userId
-    const User = await Profile.findOne({ id });
-    if (!User) {
-      throw new Error('user not found')
-    }
-    console.log(req.file);
-    if (!req.file) {
-      return next()
-    }
+    const id = req.user.userId
     const path = req.file.path;
-    const image = await imageUploader(User._id, path)
+    console.log(path);
+    console.log(id);
+    const image = await imageUploader(id, path)
     const saveProfilePics = await Profile.findOneAndUpdate({ user: id }, { profilePhoto: image },
       { new: true, runValidators: true })
-    req.user.image = image;
     console.log(image);
-    next()
+    res.status(StatusCodes.OK).json({ saveProfilePics });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+    next(error);
   }
 }
 

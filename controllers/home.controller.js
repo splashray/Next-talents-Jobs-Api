@@ -3,6 +3,7 @@ const candidateProfile = require('../models/candidateProfile.model')
 const candidateResume = require('../models/candidateResume.model')
 const companyJob = require('../models/companyJob.model')
 const companyProfile = require('../models/companyprofile.model')
+const { StatusCodes } = require('http-status-codes')
 
 
 
